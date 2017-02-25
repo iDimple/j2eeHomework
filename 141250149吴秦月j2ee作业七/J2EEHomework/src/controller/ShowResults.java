@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,10 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.HomeworkDao;
-import daoFactory.DaoFactory;
-import model.LoginHelper;
-import model.Result;
+import daoFactory.ServiceFactory;
+import service.ResultService;
+import util.LoginHelper;
 
 /**
  * Servlet implementation class ShowResults
@@ -19,13 +19,12 @@ import model.Result;
 @WebServlet("/ShowResults")
 public class ShowResults extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private static ResultService resultService=ServiceFactory.getResultService();
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public ShowResults() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -38,9 +37,9 @@ public class ShowResults extends HttpServlet {
 			String cid=request.getParameter("cid");
 			HttpSession session=request.getSession(false);
 			String sid=(String)session.getAttribute("sid");
-			HomeworkDao homeworkDao=DaoFactory.getHomeworkDao();
-			Result resultDao=homeworkDao.getResult(sid, cid);
-			String result=resultDao.getResult();
+			System.out.println(sid+cid);
+			String result=resultService.getResult(sid, cid);
+			System.out.println("result"+result);
 			String msg="当前查看的课程为："+cid+"<br>";
 			switch (result) {
 			case "unsubmitted":
@@ -65,7 +64,6 @@ public class ShowResults extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

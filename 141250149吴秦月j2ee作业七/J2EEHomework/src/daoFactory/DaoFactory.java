@@ -1,6 +1,7 @@
 package daoFactory;
 
 import dao.HomeworkDao;
+import dao.HomeworkDaoImpl;
 
 /**
 * @author 141250149吴秦月
@@ -8,6 +9,6 @@ import dao.HomeworkDao;
 */
 public class DaoFactory {
 	public static HomeworkDao getHomeworkDao() {
-		return HomeworkDao.getInstance();
+		return HomeworkDaoImpl.getInstance();
 	}
 }

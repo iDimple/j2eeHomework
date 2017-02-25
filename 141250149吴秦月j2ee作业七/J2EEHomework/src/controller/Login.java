@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import daoFactory.ServiceFactory;
 import model.CourseList;
-import model.LoginHelper;
-import model.Student;
+import service.CourseService;
+import service.LoginService;
+import util.LoginHelper;
 
 /**
  * Servlet implementation class Login
@@ -20,13 +22,13 @@ import model.Student;
 @WebServlet("/Login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private static LoginService loginService=ServiceFactory.getLoginService();
+	private static CourseService courseService=ServiceFactory.getCourseService();
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public Login() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -58,19 +60,22 @@ public class Login extends HttpServlet {
 		}
 		//如果登录是有效登录
 		if(loginResult){
-			System.out.println("输好用户名和密码l ");
 			//正确登陆
 			String sid=request.getParameter("sid");
 			String password=request.getParameter("password");
-			Student student=new Student(sid,password);
-			boolean isValid=student.isValid();
+			boolean isValid=loginService.isValid(sid,password);
+
+
 			ServletContext context = getServletContext();
 			String url="";
 
 			if(isValid){//数据库里有这个学生,转到课程列表页面
 				session.setAttribute("sid", sid);
-				session.setAttribute("username", student.getUsername());
-				CourseList courseList=new CourseList(student.getCourseList());
+				//因为是无状态的所以取不到
+				session.setAttribute("username", loginService.getName(sid));
+				System.out.println(sid);
+				System.out.println(loginService.getName(sid));
+				CourseList courseList=new CourseList(courseService.getCourseList(sid));
 				session.setAttribute("courseList", courseList);
 				System.out.println("即将跳转");
 				url = "/view/CourseList.jsp";
