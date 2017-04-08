@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+        xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"    
+        xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="  
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+                http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd  
+                http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd  
+                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd  
+                http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd"> 
+                
+                
+	<!-- <bean id="..." class="..."> collaborators and configuration for this 
+		bean go here </bean> <bean id="..." class="..."> collaborators and configuration 
+		for this bean go here </bean> more bean definitions go here -->
+<!-- 开启这个配置，spring才能识别@Scheduled注解   -->  
+    <task:annotation-driven />  
+    
+     <!-- 配置任务线性池 -->  
+    <task:executor  id="executor" pool-size="10" />   
+    <task:scheduler id="scheduler" pool-size="10"/>  
+    <task:annotation-driven scheduler="scheduler" executor="executor" proxy-target-class="true"/>  
+ <bean id="myTaskXml" class="com.time.Shuaxin"></bean>    
+    
+    <task:scheduled-tasks>    
+        <!--   
+            这里表示的是每隔五秒执行一次   
+        -->    
+        <task:scheduled ref="myTaskXml" method="refresh" cron="0 0 2 * * ?" />    
+    </task:scheduled-tasks>        
+    
+    
+    
+    
+    
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/student_homework?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+
+	<!-- 配置sessionFactory -->
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.model" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.connection.autocommit">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+	
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="loginService" class="com.service.LoginServiceBean" />
+	<bean id="orderService" class="com.service.OrderServiceBean" />
+	<bean id="hotelService" class="com.service.HotelServiceBean" />
+	<bean id="loginAction" class="com.action.LoginAction" />
+	<bean id="registerAction" class="com.action.RegisterAction" />
+	<bean id="memberAction" class="com.action.member.MemberAction" />
+	<bean id="myOrderAction" class="com.action.member.MyOrderAction" />
+	<bean id="reserveAction" class="com.action.member.ReserveAction" />
+	<bean id="applyHotelAction" class="com.action.hotel.ApplyHotelAction" />
+	<bean id="myHotelAction" class="com.action.hotel.MyHotelAction" />
+	<bean id="checkInAction" class="com.action.hotel.CheckInAction" />
+		<bean id="checkOutAction" class="com.action.hotel.CheckoutAction" />
+		<bean id="releasePlanAction" class="com.action.hotel.ReleasePlanAction" />
+		<bean id="tongjiAction" class="com.action.hotel.TongjiAction" />
+		<bean id="shenpiAction" class="com.action.manager.ShenpiAction" />
+		<bean id="jiesuanAction" class="com.action.manager.JiesuanAction" />
+		<bean id="ruzhuAction" class="com.action.manager.RuzhuAction" />
+		<bean id="caiwuAction" class="com.action.manager.CaiwuAction" />
+		<bean id="huiyanyudinAction" class="com.action.manager.HuiyanyudinAction" />
+		
+	<!-- 定义 Autowired 自动注入 bean -->
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+	<!-- 扫描有注解的文件 base-package 包路径 -->
+	 <context:annotation-config/>
+	<context:component-scan base-package="com" />
+	<!-- 声明式容器事务管理 ,transaction-manager指定事务管理器为transactionManager -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 以User结尾的方法全部收到事务限制 -->
+			<!-- <tx:method name="*User" propagation="REQUIRED" /> -->
+			<tx:method name="*" propagation="NOT_SUPPORTED" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 定义切面，在service包及子包中所有以Service结尾的方法中,执行有关的hibernate session的事务操作 -->
+	<aop:config>
+		<!-- 只对业务逻辑层实施事务 -->
+		<aop:pointcut id="serviceOperation"
+			expression="execution( * com.service..*Service.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />
+	</aop:config>
+</beans>

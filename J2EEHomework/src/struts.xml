@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+	<package name="struts2" namespace="/homework" extends="struts-default">
+	
+		<action name="memberAccount" class="memberAction" method="myAccount">
+			<result name="success">/view/myAccount.jsp</result>
+		</action>
+		<action name="saveAccount" class="memberAction" method="saveAccount">
+			<result name="success">/view/myAccount.jsp</result>
+		</action>
+		<action name="changePassword" class="memberAction" method="changePassword">
+			<result name="success">/view/myAccount.jsp</result>
+		</action>
+		<action name="active" class="memberAction" method="active">
+			<result name="success" type="redirectAction">memberAccount</result>
+		</action>
+		<action name="chongzhi" class="memberAction" method="chongzhi">
+			<result name="success" type="redirectAction">memberAccount</result>
+		</action>
+		<action name="cancelmember" class="memberAction" method="cancelmember">
+			<result name="success" type="redirectAction">memberAccount</result>
+		</action>
+		<action name="duihuan" class="memberAction" method="duihuan">
+			<result name="success" type="redirectAction">memberAccount</result>
+		</action>
+		
+		<action name="myOrder" class="myOrderAction" method="myOrder">
+			<result name="success">/view/MyOrder.jsp</result>
+		</action>
+		<action name="cancel" class="myOrderAction" method="cancel">
+			<result name="success" type="redirectAction">myOrder</result>
+		</action>
+		
+		<action name="reserveRoom" class="reserveAction" method="hotelList">
+			<result name="success" >/view/reserve.jsp</result>
+		</action>
+		<action name="generateOrders" class="reserveAction" method="generateOrders">
+			<result name="success" type="redirectAction">myOrder</result>
+			<result name="input">/view/reserve.jsp</result>
+		</action>
+		<action name="chooseTime" class="reserveAction" method="chooseTime">
+			<result name="success">/view/reserveRoom.jsp</result>
+			<result name="input">/view/reserveRoom.jsp</result>
+		</action>
+		
+		<action name="tongji" class="tongjiAction" method="execute">
+			<result name="success">/view/hotel/tongji.jsp</result>
+			<result name="input">/view/reserveRoom.jsp</result>
+		</action>
+		
+		<action name="applyHotelNew" class="applyHotelAction" method="apply">
+			<result name="success">/view/welcome.jsp</result>
+		</action>
+		<action name="myHotelAction" class="myHotelAction" method="execute">
+			<result name="success">/view/hotel/myHotel.jsp</result>
+		</action>
+		<action name="edit" class="myHotelAction" method="edit">
+			<result name="success" type="redirectAction">myHotelAction</result>
+		</action>
+		
+		<action name="releasePlan" class="releasePlanAction" method="execute">
+			<result name="success">/view/hotel/plan.jsp</result>
+			<result name="error">/view/hotel/NoAppro.jsp</result>
+		</action>
+		<action name="plan" class="releasePlanAction" method="plan">
+			<result name="success">/view/hotel/plan.jsp</result>
+			<result name="error">/view/hotel/NoAppro.jsp</result>
+		</action>
+		<action name="checkInMember" class="checkInAction" method="execute">
+			<result name="success">/view/hotel/checkin.jsp</result>
+			<result name="error">/view/hotel/checkin.jsp</result>
+		</action>
+		<action name="checkinNot" class="checkInAction" method="checkinNot">
+			<result name="success">/view/hotel/checkin.jsp</result>
+			<result name="error">/view/hotel/checkin.jsp</result>
+		</action>
+		<action name="initnotMember" class="checkInAction" method="initnotMember">
+			<result name="success">/view/hotel/checkin.jsp</result>
+			<result name="error">/view/hotel/checkin.jsp</result>
+		</action>
+		
+		<action name="initOrder" class="checkOutAction" method="initOrder">
+			<result name="success">/view/hotel/checkout.jsp</result>
+			<result name="error">/view/hotel/checkout.jsp</result>
+		</action>
+		<action name="checkOut" class="checkOutAction" method="execute">
+			<result name="success" type="redirectAction">initOrder</result>
+			<result name="error">/view/hotel/checkout.jsp</result>
+		</action>
+		
+		<action name="login" class="loginAction">
+		<result name="member" >/view/welcome.jsp</result>
+			<result name="waiter">/view/welcome.jsp</result>
+			<result name="manager">/view/welcome.jsp</result>
+			<result name="error">/view/Login.jsp</result>
+		</action>
+		
+		
+		<action name="shenpi" class="shenpiAction" method="shenpi">
+		<result name="success" >/view/manager/shenpi.jsp</result>
+		</action>
+		<action name="approve" class="shenpiAction" method="approve">
+		<result name="success" type="redirectAction">shenpi</result>
+		</action>
+		
+		
+		<action name="jiesuan" class="jiesuanAction" method="jiesuan">
+		<result name="success" >/view/manager/jiesuan.jsp</result>
+		</action>
+		<action name="pay" class="jiesuanAction" method="pay">
+		<result name="success" type="redirectAction">jiesuan</result>
+		</action>
+		
+		<action name="register" class="registerAction">
+			<result name="input">/view/register.jsp</result>
+			<result name="success">/view/welcome.jsp</result>
+		</action>
+		
+		<action name="ruzhu" class="ruzhuAction" method="ruzhu">
+		<result name="success" >/view/manager/ruzhu.jsp</result>
+		</action>
+		
+		<action name="xiaofei" class="huiyanyudinAction" method="xiaofei">
+		<result name="success" >/view/manager/xiaofei.jsp</result>
+		</action>
+		
+		<action name="caiwu" class="caiwuAction" method="caiwu">
+		<result name="success" >/view/manager/caiwu.jsp</result>
+		</action>
+	</package>
+</struts>
+
